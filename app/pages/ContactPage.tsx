@@ -1,3 +1,4 @@
+import { ArrowRight, CheckCheckIcon, ClockFadingIcon, CloudLightningIcon, LucideMapPinned, Mails, MapPinCheckIcon, MessagesSquareIcon, PhoneCallIcon } from "lucide-react";
 import { useState } from "react";
 
 const faqs = [
@@ -9,9 +10,9 @@ const faqs = [
 ];
 
 const contactOptions = [
-  { icon: "💬", title: "Live Chat", desc: "Chat with our support team in real time.", action: "Start Chat", color: "#e8ff47" },
-  { icon: "📧", title: "Email Support", desc: "Send us an email and we'll respond within 24 hours.", action: "Send Email", color: "#47ffe8" },
-  { icon: "📞", title: "Phone Support", desc: "Speak with a representative Mon–Fri, 9am–6pm GMT.", action: "+233 30 000 0000", color: "#ff47b4" },
+  { icon: <MessagesSquareIcon/>, title: "Live Chat", desc: "Chat with our support team in real time.", action: "Start Chat", color: "#e8ff47" },
+  { icon: <Mails/>, title: "Email Support", desc: "Send us an email and we'll respond within 24 hours.", action: "Send Email", color: "#47ffe8" },
+  { icon: <PhoneCallIcon/>, title: "Phone Support", desc: "Speak with a representative Mon–Fri, 9am–6pm GMT.", action: "+233 55 553 0670", color: "#ff47b4" },
 ];
 
 export default function ContactPage() {
@@ -73,7 +74,7 @@ export default function ContactPage() {
               <h2 className="text-2xl font-black text-white mb-6">Send a Message</h2>
               {submitted ? (
                 <div className="rounded-xl bg-[#e8ff47]/10 border border-[#e8ff47]/30 p-8 text-center">
-                  <div className="text-4xl mb-4">✅</div>
+                  <div className="text-4xl mb-4"><CheckCheckIcon color="green"/></div>
                   <h3 className="text-white font-bold text-lg mb-2">Message Sent!</h3>
                   <p className="text-white/40 text-sm">We'll get back to you within 24 hours.</p>
                   <button
@@ -139,9 +140,9 @@ export default function ContactPage() {
 
                   <button
                     type="submit"
-                    className="w-full bg-[#e8ff47] text-black text-sm font-bold py-3 rounded-lg hover:bg-[#d4eb2e] transition-colors"
+                    className="w-full bg-[#e8ff47] flex items-center justify-center space-x-4 text-black font-bold py-3 rounded-lg hover:bg-[#d4eb2e] transition-colors"
                   >
-                    Send Message →
+                    <span>Send Message</span> <ArrowRight size={18}/>
                   </button>
                 </form>
               )}
@@ -152,16 +153,16 @@ export default function ContactPage() {
               <h2 className="text-2xl font-black text-white mb-6">Our Office</h2>
               <div className="rounded-xl bg-white/5 border border-white/10 overflow-hidden mb-6">
                 <div className="h-44 bg-linear-to-br from-[#1a2a0a] to-[#0d1a0d] flex items-center justify-center">
-                  <span className="text-6xl opacity-30">🗺️</span>
+                  <span className="text-6xl opacity-30"><LucideMapPinned size={52}/></span>
                 </div>
                 <div className="p-5 space-y-3">
                   {[
-                    ["📍", "Address", "14 Commerce Street, Accra Central, Ghana"],
-                    ["🕐", "Hours", "Mon–Fri: 9:00am – 6:00pm GMT"],
-                    ["📧", "Email", "support@mrkt.store"],
-                    ["📞", "Phone", "+233 30 000 0000"],
-                  ].map(([icon, label, val]) => (
-                    <div key={label} className="flex items-start gap-3">
+                    [<MapPinCheckIcon/>, "Address", "14 Commerce Street, Accra Central, Ghana"],
+                    [<ClockFadingIcon/>, "Hours", "Mon–Fri: 9:00am – 6:00pm GMT"],
+                    [<MessagesSquareIcon/>, "Email", "support@mrkt.store"],
+                    [<PhoneCallIcon/>, "Phone", "+233 55 553 0670"],
+                  ].map(([icon, label, val],i) => (
+                    <div key={i} className="flex items-start gap-3">
                       <span className="mt-0.5">{icon}</span>
                       <div>
                         <p className="text-xs text-white/30 font-semibold uppercase tracking-wider">{label}</p>
@@ -174,9 +175,9 @@ export default function ContactPage() {
 
               {/* Response time badges */}
               <div className="grid grid-cols-2 gap-3">
-                {[["⚡", "< 2 min", "Live Chat"], ["📧", "< 24 hrs", "Email"]].map(([ico, time, ch]) => (
-                  <div key={ch} className="p-4 rounded-lg bg-white/5 border border-white/10 text-center">
-                    <div className="text-xl mb-1">{ico}</div>
+                {[[<CloudLightningIcon/>, "< 2 min", "Live Chat"], [<ClockFadingIcon/>, "< 24 hrs", "Email"]].map(([ico, time, ch],i) => (
+                  <div key={i} className="p-4 rounded-lg bg-white/5 border border-white/10 text-center">
+                    <div className="text-xl mb-1 flex justify-center items-center">{ico}</div>
                     <div className="text-[#e8ff47] font-black text-sm">{time}</div>
                     <div className="text-white/30 text-xs">{ch} response</div>
                   </div>

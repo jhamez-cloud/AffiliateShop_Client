@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/Productcard";
+import { BaggageClaim, BoxesIcon, Plane, StarIcon } from "lucide-react";
 
 const heroSlides = [
   {
@@ -9,7 +10,7 @@ const heroSlides = [
     cta: "Browse All Deals",
     accent: "#e8ff47",
     bg: "from-[#1a1a2e] to-[#0a0a0a]",
-    emoji: "⚡",
+    src: "/icons/bolt.png",
   },
   {
     tag: "Flash Sale",
@@ -18,7 +19,7 @@ const heroSlides = [
     cta: "Shop Tech",
     accent: "#47ffe8",
     bg: "from-[#0d2b2b] to-[#0a0a0a]",
-    emoji: "💻",
+    src: "/images/laptop_hero.png",
   },
   {
     tag: "New Arrivals",
@@ -27,14 +28,14 @@ const heroSlides = [
     cta: "Explore Fashion",
     accent: "#ff47b4",
     bg: "from-[#2b0d1f] to-[#0a0a0a]",
-    emoji: "👗",
+    src: "/images/isolated.webp",
   },
 ];
 
 const platformDeals = [
   {
     platform: "Temu",
-    icon: "🛒",
+    icon: <StarIcon/>,
     color: "#ff6b35",
     tagline: "Ultra-low prices",
     products: [
@@ -46,7 +47,7 @@ const platformDeals = [
   },
   {
     platform: "Jumia",
-    icon: "📦",
+    icon: <BoxesIcon/>,
     color: "#f97316",
     tagline: "Africa's #1 marketplace",
     products: [
@@ -58,7 +59,7 @@ const platformDeals = [
   },
   {
     platform: "Alibaba",
-    icon: "🏭",
+    icon: <Plane/>,
     color: "#f59e0b",
     tagline: "Wholesale & bulk deals",
     products: [
@@ -70,7 +71,7 @@ const platformDeals = [
   },
   {
     platform: "Amazon",
-    icon: "⭐",
+    icon: <BaggageClaim/>,
     color: "#0ea5e9",
     tagline: "Prime-worthy picks",
     products: [
@@ -83,12 +84,12 @@ const platformDeals = [
 ];
 
 const featuredCategories = [
-  { name: "Electronics", emoji: "💻", count: "2.4k+ items" },
-  { name: "Fashion", emoji: "👗", count: "5.1k+ items" },
-  { name: "Home & Garden", emoji: "🏡", count: "1.8k+ items" },
-  { name: "Sports", emoji: "⚽", count: "900+ items" },
-  { name: "Beauty", emoji: "💄", count: "3.2k+ items" },
-  { name: "Toys", emoji: "🧸", count: "1.1k+ items" },
+  { name: "Electronics", src: "/icons/computer.png", count: "2.4k+ items" },
+  { name: "Fashion", src: "/icons/dress.png", count: "5.1k+ items" },
+  { name: "Home & Garden", src: "/icons/house-building.png", count: "1.8k+ items" },
+  { name: "Sports", src: "/icons/volleyball.png", count: "900+ items" },
+  { name: "Beauty", src: "/icons/blush.png", count: "3.2k+ items" },
+  { name: "Toys", src: "/icons/rocking-horse.png", count: "1.1k+ items" },
 ];
 
 export default function HomePage({ navigate }:{navigate:(page:string) => void}) {
@@ -155,7 +156,7 @@ export default function HomePage({ navigate }:{navigate:(page:string) => void}) 
 
           {/* Floating Emoji */}
           <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden lg:flex text-[140px] opacity-20 select-none pointer-events-none">
-            {slide.emoji}
+            <img src={slide.src} className="w-90 h-87"/>
           </div>
         </div>
 
@@ -175,13 +176,13 @@ export default function HomePage({ navigate }:{navigate:(page:string) => void}) 
       <section className="py-10 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-            {featuredCategories.map((cat) => (
+            {featuredCategories.map((cat,i) => (
               <button
-                key={cat.name}
+                key={i}
                 onClick={() => navigate("shop")}
-                className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#e8ff47]/50 hover:bg-white/8 transition-all group"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/10 border border-white/5 hover:border-[#e8ff47]/50 hover:bg-white/8 transition-all group"
               >
-                <span className="text-2xl group-hover:scale-110 transition-transform">{cat.emoji}</span>
+                <img src={cat.src} className="w-6 h-6" />
                 <span className="text-xs font-semibold text-white/80">{cat.name}</span>
                 <span className="text-xs text-white/30">{cat.count}</span>
               </button>

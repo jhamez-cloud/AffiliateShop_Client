@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ProductCard from "@/components/Productcard";
+import { SearchIcon, SettingsIcon } from "lucide-react";
 
 const allProducts = [
   { id: 1, name: "Wireless Earbuds Pro X100", price: 12.99, originalPrice: 35.0, emoji: "🎧", source: "Temu", rating: 4.3, category: "Electronics" },
@@ -58,9 +59,9 @@ export default function ShopPage() {
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#e8ff47]">Store</span>
+          <span className="font-bold uppercase tracking-widest text-[#e8ff47]">Store</span>
           <span className="w-4 h-px bg-white/20" />
-          <span className="text-xs text-white/30">Browse all deals</span>
+          <span className="text-sm text-white/30">Browse all deals</span>
         </div>
         <h1 className="text-3xl font-black text-white tracking-tight">Shop All Products</h1>
         <p className="text-white/40 mt-1 text-sm">{filtered.length} results found</p>
@@ -69,7 +70,7 @@ export default function ShopPage() {
       {/* Search + Sort Row */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-sm">🔍</span>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-sm"><SearchIcon size={16}/></span>
           <input
             type="text"
             placeholder="Search products..."
@@ -93,7 +94,7 @@ export default function ShopPage() {
           onClick={() => setFilterOpen(!filterOpen)}
           className="sm:hidden flex items-center gap-2 bg-white/5 border border-white/10 text-white/70 text-sm px-4 py-3 rounded-lg"
         >
-          ⚙️ Filters
+          <SettingsIcon/> Filters
         </button>
       </div>
 
