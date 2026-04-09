@@ -7,6 +7,7 @@ export default function Navbar({ currentPage, navigate }:{ currentPage: string, 
     { label: "Home", page: "home" },
     { label: "Shop", page: "shop" },
     { label: "Contact", page: "contact" },
+    {label:"Notification",page:"notification"}
   ];
 
   return (
@@ -19,10 +20,10 @@ export default function Navbar({ currentPage, navigate }:{ currentPage: string, 
             className="flex items-center gap-2 group"
           >
             <div className="w-8 h-8 bg-[#e8ff47] rounded-sm flex items-center justify-center">
-              <span className="text-black font-black text-sm">M</span>
+              <span className="text-black font-black text-sm">AP</span>
             </div>
             <span className="text-white font-bold text-lg tracking-tight">
-              MRKТ
+              Affiliate Partner
             </span>
           </button>
 
