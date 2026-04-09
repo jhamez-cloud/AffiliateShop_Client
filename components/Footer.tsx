@@ -1,3 +1,5 @@
+import { BaggageClaim, BoxesIcon, Plane, StarIcon } from "lucide-react";
+
 export default function Footer({ navigate }:{navigate:(page:string) => void}) {
   const footerLinks = {
     Company: ["About Us", "Careers", "Press", "Blog"],
@@ -6,11 +8,24 @@ export default function Footer({ navigate }:{navigate:(page:string) => void}) {
   };
 
   const platforms = [
-    { name: "Temu", icon: "🛒" },
-    { name: "Jumia", icon: "📦" },
-    { name: "Alibaba", icon: "🏭" },
-    { name: "Amazon", icon: "⭐" },
+    { name: "Temu", icon: <StarIcon/> },
+    { name: "Jumia", icon: <BoxesIcon/> },
+    { name: "Alibaba", icon: <Plane/> },
+    { name: "Amazon", icon: <BaggageClaim/> },
   ];
+
+  const icons = [
+    "/icons/instagram.svg",
+    "/icons/facebook.svg",
+    "/icons/youtube.svg",
+    "/icons/x.svg",
+  ]
+
+  const payment_mthd_icons = [
+    "/icons/paypal.svg",
+    "/icons/mastercard.svg",
+    "/icons/visa.svg",
+  ]
 
   return (
     <footer className="border-t border-white/10 bg-[#0a0a0a]">
@@ -53,12 +68,12 @@ export default function Footer({ navigate }:{navigate:(page:string) => void}) {
             </p>
             {/* Social Icons */}
             <div className="flex gap-3 mt-6">
-              {["𝕏", "IG", "FB", "YT"].map((s) => (
+              {icons.map((src,i) => (
                 <button
-                  key={s}
-                  className="w-9 h-9 rounded-md border border-white/10 text-white/40 hover:text-white hover:border-white/30 text-xs font-bold transition-all flex items-center justify-center"
+                  key={i}
+                  className="w-9 h-9 bg-white rounded-md border border-white/10 text-white/40 hover:text-white hover:border-white/30 text-xs font-bold transition-all flex items-center justify-center"
                 >
-                  {s}
+                  <img key={i} src={src} className="w-6 h-6" />
                 </button>
               ))}
             </div>
@@ -92,18 +107,18 @@ export default function Footer({ navigate }:{navigate:(page:string) => void}) {
           </p>
           <div className="flex items-center gap-4">
             <div className="flex gap-2">
-              {["VISA", "MC", "PP"].map((c) => (
+              {payment_mthd_icons.map((src,i) => (
                 <span
-                  key={c}
-                  className="text-xs border border-white/10 rounded px-2 py-1 text-white/30"
+                  key={i}
+                  className="text-xs border bg-white border-white/10 rounded px-2 py-1 text-white/30"
                 >
-                  {c}
+                  <img key={i} src={src} className="w-6 h-6" />
                 </span>
               ))}
             </div>
             <div className="flex gap-2 items-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-white/30 text-xs">All systems normal</span>
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-white/30 text-sm">All systems normal</span>
             </div>
           </div>
         </div>
