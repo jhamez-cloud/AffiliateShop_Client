@@ -1,28 +1,32 @@
 import { useState } from "react";
 import ProductCard from "@/components/Productcard";
 import { SearchIcon, SettingsIcon } from "lucide-react";
+import useSWR from "swr";
+import { Product } from "@/types/producttype";
+import ApiLoading from "@/components/ApiLoading";
+import NoProduct from "@/components/NoProduct";
 
 const allProducts = [
-  { id: 1, name: "Wireless Earbuds Pro X100", price: 12.99, originalPrice: 35.0, emoji: "🎧", source: "Temu", rating: 4.3, category: "Electronics" },
-  { id: 2, name: "LED Strip Lights 10m RGB", price: 8.49, originalPrice: 22.0, emoji: "💡", source: "Temu", rating: 4.5, category: "Home" },
-  { id: 3, name: "Portable Phone Stand", price: 4.99, originalPrice: 12.0, emoji: "📱", source: "Temu", rating: 4.1, category: "Electronics" },
-  { id: 4, name: "Stainless Steel Bottle", price: 6.99, originalPrice: 18.0, emoji: "🍶", source: "Temu", rating: 4.4, category: "Sports" },
-  { id: 5, name: "Smart Watch Fitness Tracker", price: 29.99, originalPrice: 55.0, emoji: "⌚", source: "Jumia", rating: 4.2, category: "Electronics", badge: "Top Pick" },
-  { id: 6, name: "Ankara Print Dress Set", price: 18.0, originalPrice: 30.0, emoji: "👗", source: "Jumia", rating: 4.6, category: "Fashion" },
-  { id: 7, name: "Laptop Backpack 15.6\"", price: 22.5, originalPrice: 45.0, emoji: "🎒", source: "Jumia", rating: 4.4, category: "Fashion" },
-  { id: 8, name: "Blender 600W Kitchen", price: 35.0, originalPrice: 60.0, emoji: "🍹", source: "Jumia", rating: 4.3, category: "Home" },
-  { id: 9, name: "Solar Power Bank 20000mAh", price: 24.99, originalPrice: 60.0, emoji: "🔋", source: "Alibaba", rating: 4.5, category: "Electronics" },
-  { id: 10, name: "Drone Mini FPV Camera", price: 89.0, originalPrice: 180.0, emoji: "🚁", source: "Alibaba", rating: 4.4, category: "Electronics", badge: "Hot" },
-  { id: 11, name: "UV Sterilizer Box", price: 19.99, originalPrice: 45.0, emoji: "🧪", source: "Alibaba", rating: 4.2, category: "Home" },
-  { id: 12, name: "Mechanical Keyboard TKL", price: 45.0, originalPrice: 90.0, emoji: "⌨️", source: "Alibaba", rating: 4.7, category: "Electronics" },
-  { id: 13, name: "Kindle Paperwhite 11th Gen", price: 99.0, originalPrice: 140.0, emoji: "📖", source: "Amazon", rating: 4.8, category: "Electronics", badge: "Bestseller" },
-  { id: 14, name: "Echo Dot 5th Generation", price: 29.99, originalPrice: 50.0, emoji: "🔊", source: "Amazon", rating: 4.7, category: "Electronics" },
-  { id: 15, name: "Fire TV Stick 4K Max", price: 39.99, originalPrice: 60.0, emoji: "📺", source: "Amazon", rating: 4.6, category: "Electronics" },
-  { id: 16, name: "Instant Pot Duo 7-in-1", price: 59.0, originalPrice: 100.0, emoji: "🍲", source: "Amazon", rating: 4.9, category: "Home" },
-  { id: 17, name: "Running Shoes Mesh Air", price: 38.0, originalPrice: 80.0, emoji: "👟", source: "Jumia", rating: 4.3, category: "Sports" },
-  { id: 18, name: "Yoga Mat Non-Slip 6mm", price: 15.5, originalPrice: 30.0, emoji: "🧘", source: "Temu", rating: 4.5, category: "Sports" },
-  { id: 19, name: "Skincare Set 5-piece", price: 22.0, originalPrice: 55.0, emoji: "✨", source: "Alibaba", rating: 4.4, category: "Beauty" },
-  { id: 20, name: "Perfume EDP 50ml", price: 25.0, originalPrice: 60.0, emoji: "🌸", source: "Jumia", rating: 4.6, category: "Beauty" },
+  { id: 1, name: "Wireless Earbuds Pro X100", price: 12.99, originalPrice: 35.0, image: "🎧", source: "Temu", rating: 4.3, category: "Electronics" },
+  { id: 2, name: "LED Strip Lights 10m RGB", price: 8.49, originalPrice: 22.0, image: "💡", source: "Temu", rating: 4.5, category: "Home" },
+  { id: 3, name: "Portable Phone Stand", price: 4.99, originalPrice: 12.0, image: "📱", source: "Temu", rating: 4.1, category: "Electronics" },
+  { id: 4, name: "Stainless Steel Bottle", price: 6.99, originalPrice: 18.0, image: "🍶", source: "Temu", rating: 4.4, category: "Sports" },
+  { id: 5, name: "Smart Watch Fitness Tracker", price: 29.99, originalPrice: 55.0, image: "⌚", source: "Jumia", rating: 4.2, category: "Electronics", badge: "Top Pick" },
+  { id: 6, name: "Ankara Print Dress Set", price: 18.0, originalPrice: 30.0, image: "👗", source: "Jumia", rating: 4.6, category: "Fashion" },
+  { id: 7, name: "Laptop Backpack 15.6\"", price: 22.5, originalPrice: 45.0, image: "🎒", source: "Jumia", rating: 4.4, category: "Fashion" },
+  { id: 8, name: "Blender 600W Kitchen", price: 35.0, originalPrice: 60.0, image: "🍹", source: "Jumia", rating: 4.3, category: "Home" },
+  { id: 9, name: "Solar Power Bank 20000mAh", price: 24.99, originalPrice: 60.0, image: "🔋", source: "Alibaba", rating: 4.5, category: "Electronics" },
+  { id: 10, name: "Drone Mini FPV Camera", price: 89.0, originalPrice: 180.0, image: "🚁", source: "Alibaba", rating: 4.4, category: "Electronics", badge: "Hot" },
+  { id: 11, name: "UV Sterilizer Box", price: 19.99, originalPrice: 45.0, image: "🧪", source: "Alibaba", rating: 4.2, category: "Home" },
+  { id: 12, name: "Mechanical Keyboard TKL", price: 45.0, originalPrice: 90.0, image: "⌨️", source: "Alibaba", rating: 4.7, category: "Electronics" },
+  { id: 13, name: "Kindle Paperwhite 11th Gen", price: 99.0, originalPrice: 140.0, image: "📖", source: "Amazon", rating: 4.8, category: "Electronics", badge: "Bestseller" },
+  { id: 14, name: "Echo Dot 5th Generation", price: 29.99, originalPrice: 50.0, image: "🔊", source: "Amazon", rating: 4.7, category: "Electronics" },
+  { id: 15, name: "Fire TV Stick 4K Max", price: 39.99, originalPrice: 60.0, image: "📺", source: "Amazon", rating: 4.6, category: "Electronics" },
+  { id: 16, name: "Instant Pot Duo 7-in-1", price: 59.0, originalPrice: 100.0, image: "🍲", source: "Amazon", rating: 4.9, category: "Home" },
+  { id: 17, name: "Running Shoes Mesh Air", price: 38.0, originalPrice: 80.0, image: "👟", source: "Jumia", rating: 4.3, category: "Sports" },
+  { id: 18, name: "Yoga Mat Non-Slip 6mm", price: 15.5, originalPrice: 30.0, image: "🧘", source: "Temu", rating: 4.5, category: "Sports" },
+  { id: 19, name: "Skincare Set 5-piece", price: 22.0, originalPrice: 55.0, image: "✨", source: "Alibaba", rating: 4.4, category: "Beauty" },
+  { id: 20, name: "Perfume EDP 50ml", price: 25.0, originalPrice: 60.0, image: "🌸", source: "Jumia", rating: 4.6, category: "Beauty" },
 ];
 
 const platforms = ["All", "Temu", "Jumia", "Alibaba", "Amazon"];
@@ -30,6 +34,9 @@ const categories = ["All", "Electronics", "Fashion", "Home", "Sports", "Beauty"]
 const sortOptions = ["Relevance", "Price: Low to High", "Price: High to Low", "Rating", "Discount"];
 
 export default function ShopPage() {
+
+  const {data:allProducts,error:error} = useSWR<Product[]>(`products`)
+
   const [search, setSearch] = useState("");
   const [platform, setPlatform] = useState("All");
   const [category, setCategory] = useState("All");
@@ -37,10 +44,13 @@ export default function ShopPage() {
   const [priceRange, setPriceRange] = useState(200);
   const [filterOpen, setFilterOpen] = useState(false);
 
+  if(!allProducts) return <ApiLoading/>
+  if(error) return <p>Run Into A Problem Trying To Fetch Products...</p>
+
   let filtered = allProducts.filter((p) => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchPlatform = platform === "All" || p.source === platform;
-    const matchCat = category === "All" || p.category === category;
+    const matchPlatform = platform === "All" || p.market?.name === platform;
+    const matchCat = category === "All" || p.category?.name === category;
     const matchPrice = p.price <= priceRange;
     return matchSearch && matchPlatform && matchCat && matchPrice;
   });
@@ -49,8 +59,8 @@ export default function ShopPage() {
   if (sort === "Price: High to Low") filtered = [...filtered].sort((a, b) => b.price - a.price);
   if (sort === "Rating") filtered = [...filtered].sort((a, b) => b.rating - a.rating);
   if (sort === "Discount") filtered = [...filtered].sort((a, b) => {
-    const da = a.originalPrice ? a.originalPrice - a.price : 0;
-    const db = b.originalPrice ? b.originalPrice - b.price : 0;
+    const da = a.original_price ? a.original_price - a.price : 0;
+    const db = b.original_price ? b.original_price - b.price : 0;
     return db - da;
   });
 
@@ -100,7 +110,7 @@ export default function ShopPage() {
 
       <div className="flex gap-8">
         {/* Sidebar Filters */}
-        <aside className={`${filterOpen ? "block" : "hidden"} sm:block w-full sm:w-56 flex-shrink-0`}>
+        <aside className={`${filterOpen ? "block" : "hidden"} sm:block w-full sm:w-56 shrink-0`}>
           <div className="sticky top-20 space-y-6">
             {/* Platform */}
             <div>
@@ -114,7 +124,7 @@ export default function ShopPage() {
                   >
                     {p}
                     <span className="float-right text-white/20 text-xs">
-                      {p === "All" ? allProducts.length : allProducts.filter((x) => x.source === p).length}
+                      {p === "All" ? allProducts.length : allProducts.filter((x) => x.market?.name === p).length}
                     </span>
                   </button>
                 ))}
@@ -169,8 +179,7 @@ export default function ShopPage() {
         <div className="flex-1 min-w-0">
           {filtered.length === 0 ? (
             <div className="text-center py-20">
-              <div className="text-4xl mb-4">🔍</div>
-              <p className="text-white/40">No products found. Try adjusting your filters.</p>
+              <NoProduct/>
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
