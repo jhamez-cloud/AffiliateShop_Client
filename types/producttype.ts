@@ -1,0 +1,21 @@
+export type Product = {
+    id:number;
+    name:string;
+    slug?:string;
+    link?:string;
+    image:string;
+    category?:{
+        id:number;
+        name:string;
+        slug:string;
+    };
+    market?:{
+        id:number;
+        name:string;
+        slug:string;
+    };
+    badge:string;
+    rating:number;
+    price:number;
+    original_price:number;
+}
