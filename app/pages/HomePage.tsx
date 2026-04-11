@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/Productcard";
 import { BaggageClaim, BoxesIcon, Plane, StarIcon } from "lucide-react";
+import { Product } from "@/types/producttype";
 
 const heroSlides = [
   {

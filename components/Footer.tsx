@@ -56,10 +56,10 @@ export default function Footer({ navigate }:{navigate:(page:string) => void}) {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-[#e8ff47] rounded-sm flex items-center justify-center">
-                <span className="text-black font-black text-sm">M</span>
+                <span className="text-black font-black text-sm">AP</span>
               </div>
               <span className="text-white font-bold text-lg tracking-tight">
-                MRKТ
+                Affiliate Partner
               </span>
             </div>
             <p className="text-white/40 text-sm leading-relaxed max-w-xs">
@@ -103,7 +103,7 @@ export default function Footer({ navigate }:{navigate:(page:string) => void}) {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-white/30 text-xs">
-            © 2025 MRKT. All rights reserved.
+            &copy; 2026 Affiliate Partner. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <div className="flex gap-2">
@@ -117,7 +117,7 @@ export default function Footer({ navigate }:{navigate:(page:string) => void}) {
               ))}
             </div>
             <div className="flex gap-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <div className="w-4 h-4 rounded-full bg-green-400 animate-pulse" />
               <span className="text-white/30 text-sm">All systems normal</span>
             </div>
           </div>
