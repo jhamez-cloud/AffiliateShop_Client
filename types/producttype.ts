@@ -14,7 +14,7 @@ export type Product = {
         name:string;
         slug:string;
     };
-    badge:string;
+    badge?:string;
     rating:number;
     price:number;
     original_price:number;
