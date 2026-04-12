@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ProductCard from "@/components/Productcard";
 import { BaggageClaim, BoxesIcon, Plane, StarIcon } from "lucide-react";
 import { Product } from "@/types/producttype";
+import useSWR from "swr";
 
 const heroSlides = [
   {
@@ -33,57 +34,6 @@ const heroSlides = [
   },
 ];
 
-const platformDeals = [
-  {
-    platform: "Temu",
-    icon: <StarIcon/>,
-    color: "#ff6b35",
-    tagline: "Ultra-low prices",
-    products: [
-      { id: 1, name: "Wireless Earbuds Pro X100", price: 12.99, originalPrice: 35.0, emoji: "🎧", source: "Temu", rating: 4.3 },
-      { id: 2, name: "LED Strip Lights 10m RGB", price: 8.49, originalPrice: 22.0, emoji: "💡", source: "Temu", rating: 4.5 },
-      { id: 3, name: "Portable Phone Stand Desk", price: 4.99, originalPrice: 12.0, emoji: "📱", source: "Temu", rating: 4.1 },
-      { id: 4, name: "Stainless Steel Water Bottle", price: 6.99, originalPrice: 18.0, emoji: "🍶", source: "Temu", rating: 4.4 },
-    ],
-  },
-  {
-    platform: "Jumia",
-    icon: <BoxesIcon/>,
-    color: "#f97316",
-    tagline: "Africa's #1 marketplace",
-    products: [
-      { id: 5, name: "Smart Watch Fitness Tracker", price: 29.99, originalPrice: 55.0, emoji: "⌚", source: "Jumia", rating: 4.2, badge: "Top Pick" },
-      { id: 6, name: "Ankara Print Dress Set", price: 18.0, originalPrice: 30.0, emoji: "👗", source: "Jumia", rating: 4.6 },
-      { id: 7, name: "Laptop Backpack 15.6\"", price: 22.50, originalPrice: 45.0, emoji: "🎒", source: "Jumia", rating: 4.4 },
-      { id: 8, name: "Blender 600W Kitchen", price: 35.0, originalPrice: 60.0, emoji: "🍹", source: "Jumia", rating: 4.3 },
-    ],
-  },
-  {
-    platform: "Alibaba",
-    icon: <Plane/>,
-    color: "#f59e0b",
-    tagline: "Wholesale & bulk deals",
-    products: [
-      { id: 9, name: "Solar Power Bank 20000mAh", price: 24.99, originalPrice: 60.0, emoji: "🔋", source: "Alibaba", rating: 4.5 },
-      { id: 10, name: "Drone Mini FPV Camera", price: 89.0, originalPrice: 180.0, emoji: "🚁", source: "Alibaba", rating: 4.4, badge: "Hot" },
-      { id: 11, name: "UV Sterilizer Box Phone", price: 19.99, originalPrice: 45.0, emoji: "🧪", source: "Alibaba", rating: 4.2 },
-      { id: 12, name: "Mechanical Keyboard TKL", price: 45.0, originalPrice: 90.0, emoji: "⌨️", source: "Alibaba", rating: 4.7 },
-    ],
-  },
-  {
-    platform: "Amazon",
-    icon: <BaggageClaim/>,
-    color: "#0ea5e9",
-    tagline: "Prime-worthy picks",
-    products: [
-      { id: 13, name: "Kindle Paperwhite 11th Gen", price: 99.0, originalPrice: 140.0, emoji: "📖", source: "Amazon", rating: 4.8, badge: "Bestseller" },
-      { id: 14, name: "Echo Dot 5th Generation", price: 29.99, originalPrice: 50.0, emoji: "🔊", source: "Amazon", rating: 4.7 },
-      { id: 15, name: "Fire TV Stick 4K Max", price: 39.99, originalPrice: 60.0, emoji: "📺", source: "Amazon", rating: 4.6 },
-      { id: 16, name: "Instant Pot Duo 7-in-1", price: 59.0, originalPrice: 100.0, emoji: "🍲", source: "Amazon", rating: 4.9 },
-    ],
-  },
-];
-
 const featuredCategories = [
   { name: "Electronics", src: "/icons/computer.png", count: "2.4k+ items" },
   { name: "Fashion", src: "/icons/dress.png", count: "5.1k+ items" },
@@ -94,13 +44,61 @@ const featuredCategories = [
 ];
 
 export default function HomePage({ navigate }:{navigate:(page:string) => void}) {
+
+  const {data:jumia,error:jumiaError} = useSWR<Product[]>(`products/?market=jumia-market`)
+  const {data:temu,error:temuError} = useSWR<Product[]>(`products/?market=temu-market`)
+  const {data:amazon,error:amazonError} = useSWR<Product[]>(`products/?market=amazon-market`)
+  const {data:alibaba,error:alibabaError} = useSWR<Product[]>(`products/?market=alibaba-market`)
+
   const [slideIndex, setSlideIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("Temu");
 
+  const [jumiaProducts, setJumiaProducts] = useState<Product[]>([])
+  const [temuProducts, setTemuProducts] = useState<Product[]>([])
+  const [amazonProducts, setAmazonProducts] = useState<Product[]>([])
+  const [alibabaProducts, setAlibabaProducts] = useState<Product[]>([])
+
   useEffect(() => {
     const t = setInterval(() => setSlideIndex((i) => (i + 1) % heroSlides.length), 5000);
+
+    if (jumia) setJumiaProducts(jumia)
+    if (temu) setTemuProducts(temu)
+    if (amazon) setAmazonProducts(amazon)
+    if (alibaba) setAlibabaProducts(alibaba)
+
     return () => clearInterval(t);
-  }, []);
+  }, [jumia, temu, amazon, alibaba]);
+
+  const platformDeals = [
+  {
+    platform: "Temu",
+    icon: <StarIcon/>,
+    color: "#ff6b35",
+    tagline: "Ultra-low prices",
+    products: temuProducts
+  },
+  {
+    platform: "Jumia",
+    icon: <BoxesIcon/>,
+    color: "#f97316",
+    tagline: "Africa's #1 marketplace",
+    products: jumiaProducts
+  },
+  {
+    platform: "Alibaba",
+    icon: <Plane/>,
+    color: "#f59e0b",
+    tagline: "Wholesale & bulk deals",
+    products: alibabaProducts
+  },
+  {
+    platform: "Amazon",
+    icon: <BaggageClaim/>,
+    color: "#0ea5e9",
+    tagline: "Prime-worthy picks",
+    products: amazonProducts
+  },
+];
 
   const slide = heroSlides[slideIndex];
   const activeData = platformDeals.find((p) => p.platform === activeTab);
@@ -155,7 +153,7 @@ export default function HomePage({ navigate }:{navigate:(page:string) => void}) 
             </div>
           </div>
 
-          {/* Floating Emoji */}
+          {/* Floating image */}
           <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden lg:flex text-[140px] opacity-20 select-none pointer-events-none">
             <img src={slide.src} className="w-90 h-87"/>
           </div>
