@@ -33,16 +33,19 @@ export default function ProductCard({ product, compact = false }:{ product: Prod
       </div>
 
       {/* Source Tag */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="w-full flex items-center justify-between mb-2">
         <span className="text-xs text-white/30 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
           via {product.market?.name}
         </span>
-        <span className="text-xs text-white/30">{product.rating}<StarIcon size={8}/></span>
+        <span className="flex items-center space-x-1 text-sm text-white/30">
+          <p>{product.rating}</p>
+          <StarIcon size={12} color="#e8ff47"/>
+        </span>
       </div>
 
       {/* Title */}
       <h3 className="text-sm font-semibold text-white leading-snug mb-1 line-clamp-2 group-hover:text-[#e8ff47] transition-colors">
-        {product.name}
+        {(product.name).toLocaleUpperCase()}
       </h3>
 
       {/* Price */}

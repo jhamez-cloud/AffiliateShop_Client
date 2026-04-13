@@ -28,9 +28,6 @@ export default function NoProduct() {
 
         <EmptyContent>
             <Button variant="outline" size="sm">Cancel</Button>
-            <Button variant="outline" size="sm">
-                Check Discounted Jumia Products
-            </Button>
         </EmptyContent>
     </Empty>
   )
