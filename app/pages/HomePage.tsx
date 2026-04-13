@@ -3,6 +3,7 @@ import ProductCard from "@/components/Productcard";
 import { BaggageClaim, BoxesIcon, Plane, StarIcon } from "lucide-react";
 import { Product } from "@/types/producttype";
 import useSWR from "swr";
+import NoProduct from "@/components/NoProduct";
 
 const heroSlides = [
   {
@@ -61,10 +62,12 @@ export default function HomePage({ navigate }:{navigate:(page:string) => void}) 
   useEffect(() => {
     const t = setInterval(() => setSlideIndex((i) => (i + 1) % heroSlides.length), 5000);
 
-    if (jumia) setJumiaProducts(jumia)
-    if (temu) setTemuProducts(temu)
-    if (amazon) setAmazonProducts(amazon)
-    if (alibaba) setAlibabaProducts(alibaba)
+    if (jumia) setJumiaProducts(jumia.slice(0,4))
+    if (temu) setTemuProducts(temu.slice(0,4))
+    if (amazon) setAmazonProducts(amazon.slice(0,4))
+    if (alibaba) setAlibabaProducts(alibaba.slice(0,4))
+
+    console.log({ jumia, jumiaError, temu, temuError });
 
     return () => clearInterval(t);
   }, [jumia, temu, amazon, alibaba]);
@@ -232,6 +235,11 @@ export default function HomePage({ navigate }:{navigate:(page:string) => void}) 
           {activeData && (
             <div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                {!activeData.products.length && (
+                  <div className="col-span-full flex items-center justify-center">
+                    <NoProduct/>
+                  </div>
+                )}
                 {activeData.products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
