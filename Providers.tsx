@@ -4,7 +4,7 @@ import { SWRConfig } from "swr"
 
 const Django_Url = process.env.NEXT_PUBLIC_DJANGO_URL
 const fetcher = async (endpoint:string) => {
-    const res = await fetch(`${Django_Url}/api/v1/${endpoint}/`,{credentials:"include"})
+    const res = await fetch(`${Django_Url}/api/v1/${endpoint}`,{credentials:"include"})
 
     if(!res.ok) throw new Error("Failed To Get Resources...")
 
