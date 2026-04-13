@@ -10,7 +10,7 @@ const faqs = [
 ];
 
 const contactOptions = [
-  { icon: <MessagesSquareIcon/>, title: "Live Chat", desc: "Chat with our support team in real time.", action: "Start Chat", color: "#e8ff47" },
+  { icon: <MessagesSquareIcon/>, title: "Quick Notification", desc: "Receive notifications on products and markets in real time.", action: "Check Notification", color: "#e8ff47" },
   { icon: <Mails/>, title: "Email Support", desc: "Send us an email and we'll respond within 24 hours.", action: "Send Email", color: "#47ffe8" },
   { icon: <PhoneCallIcon/>, title: "Phone Support", desc: "Speak with a representative Mon–Fri, 9am–6pm GMT.", action: "+233 55 553 0670", color: "#ff47b4" },
 ];
@@ -175,7 +175,7 @@ export default function ContactPage() {
 
               {/* Response time badges */}
               <div className="grid grid-cols-2 gap-3">
-                {[[<CloudLightningIcon/>, "< 2 min", "Live Chat"], [<ClockFadingIcon/>, "< 24 hrs", "Email"]].map(([ico, time, ch],i) => (
+                {[[<CloudLightningIcon/>, "< 2 min", "Real-Time Notification"], [<ClockFadingIcon/>, "< 24 hrs", "Email"]].map(([ico, time, ch],i) => (
                   <div key={i} className="p-4 rounded-lg bg-white/5 border border-white/10 text-center">
                     <div className="text-xl mb-1 flex justify-center items-center">{ico}</div>
                     <div className="text-[#e8ff47] font-black text-sm">{time}</div>

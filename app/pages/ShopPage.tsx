@@ -35,7 +35,7 @@ const sortOptions = ["Relevance", "Price: Low to High", "Price: High to Low", "R
 
 export default function ShopPage() {
 
-  const {data:allProducts,error:error} = useSWR<Product[]>(`products`)
+  const {data:allProducts,error:error} = useSWR<Product[]>(`products/`)
 
   const [search, setSearch] = useState("");
   const [platform, setPlatform] = useState("All");
