@@ -14,6 +14,7 @@ import {
   Globe,
   User,
   CheckCircle2,
+  Phone,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,6 +23,9 @@ import {
   InputGroupAddon,
   InputGroupButton,
 } from "@/components/ui/input-group"
+import useSWRMutation from "swr/mutation"
+import { createuser } from "@/lib/api" 
+import firebase from "firebase/compat/app"
 
 export default function SignUpPage({
   onSignUpSuccess,
@@ -40,6 +44,13 @@ export default function SignUpPage({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [formData,setFormData] = useState({
+    email:"",
+    fullname:"",
+    phone:""
+  })
+  const {trigger} =  useSWRMutation<any,any,string,
+    {firebase_uid:string,email:string,fullname?:string,phone?:string}>(`users`,createuser)
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,8 +86,19 @@ export default function SignUpPage({
         email,
         password
       )
+
+      const payload = {
+        firebase_uid : userCredential.user.uid,
+        email : formData.email,
+        fullname : formData.fullname,
+        phone: formData.phone,
+      }
+
+      await trigger(payload)
       console.log("User created successfully:", userCredential.user)
+
       const userEmail = userCredential.user.email || email
+
       setSuccess("Account created successfully! Redirecting...")
       setTimeout(() => {
         onSignUpSuccess?.(userEmail)
@@ -114,6 +136,16 @@ export default function SignUpPage({
       provider.addScope("email")
 
       const result = await signInWithPopup(auth, provider)
+
+      const payload = {
+        firebase_uid : result.user.uid,
+        email : result.user.email!,
+        fullname : "",
+        phone : "",
+      }
+
+      await trigger(payload)
+
       console.log("Google sign-in successful:", result.user)
       const userEmail = result.user.email || ""
       setSuccess("Account created successfully! Redirecting...")
@@ -182,7 +214,7 @@ export default function SignUpPage({
             <div className="flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 px-4 py-3">
               <CheckCircle2
                 size={18}
-                className="flex-shrink-0 text-green-400"
+                className="shrink-0 text-green-400"
               />
               <p className="text-sm text-green-400">{success}</p>
             </div>
@@ -201,7 +233,7 @@ export default function SignUpPage({
                 type="text"
                 placeholder="Enter your full name"
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e) => setFormData({...formData,fullname:e.target.value})}
                 className="border-0 bg-transparent text-white placeholder-white/30 focus:ring-0"
                 disabled={isLoading}
               />
@@ -221,7 +253,10 @@ export default function SignUpPage({
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setFormData({...formData,email:e.target.value})
+                }}
                 className="border-0 bg-transparent text-white placeholder-white/30 focus:ring-0"
                 disabled={isLoading}
               />
