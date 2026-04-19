@@ -1,5 +1,7 @@
 "use client"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
+import useSWR from "swr"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 import {
   CheckCircle2,
   Clock,
@@ -7,7 +9,10 @@ import {
   Trash2,
   Eye,
   EyeOff,
+  Bell,
 } from "lucide-react"
+import { fetchNotifications } from "@/lib/api"
+import NoNotification from "@/components/NoNotification"
 
 interface Notification {
   id: number
@@ -15,80 +20,57 @@ interface Notification {
   message: string
   type: "new" | "unread" | "read"
   timestamp: string
-  icon: JSX.Element
   color: string
 }
 
-const mockNotifications: Notification[] = [
-  {
-    id: 1,
-    title: "New Deal Alert",
-    message: "iPhone 15 Pro Max - 40% off on Temu. Limited time offer!",
-    type: "new",
-    timestamp: "2 minutes ago",
-    icon: <AlertCircle size={20} />,
-    color: "#ff47b4",
-  },
-  {
-    id: 2,
-    title: "Stock Alert",
-    message: "Samsung Galaxy S24 is back in stock on Jumia",
-    type: "new",
-    timestamp: "15 minutes ago",
-    icon: <AlertCircle size={20} />,
-    color: "#ff47b4",
-  },
-  {
-    id: 3,
-    title: "Order Update",
-    message: "Your order #12345 has been shipped",
-    type: "unread",
-    timestamp: "1 hour ago",
-    icon: <Clock size={20} />,
-    color: "#47ffe8",
-  },
-  {
-    id: 4,
-    title: "Price Drop",
-    message: "MacBook Air M2 - now $799 (was $999) on Amazon",
-    type: "unread",
-    timestamp: "3 hours ago",
-    icon: <Clock size={20} />,
-    color: "#47ffe8",
-  },
-  {
-    id: 5,
-    title: "Wishlist Item Available",
-    message: "Nike Air Max 90 in your size is available again",
-    type: "read",
-    timestamp: "1 day ago",
-    icon: <CheckCircle2 size={20} />,
-    color: "#e8ff47",
-  },
-  {
-    id: 6,
-    title: "Flash Sale Ended",
-    message: "The 70% off electronics sale has ended",
-    type: "read",
-    timestamp: "2 days ago",
-    icon: <CheckCircle2 size={20} />,
-    color: "#e8ff47",
-  },
-  {
-    id: 7,
-    title: "Account Activity",
-    message: "You've earned 500 points from your recent purchase",
-    type: "read",
-    timestamp: "3 days ago",
-    icon: <CheckCircle2 size={20} />,
-    color: "#e8ff47",
-  },
-]
-
 export default function NotificationPage() {
-  const [notifications, setNotifications] =
-    useState<Notification[]>(mockNotifications)
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [filter, setFilter] = useState<"all" | "new" | "unread" | "read">("all")
+  const [user, setUser] = useState<any>(null)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [token, setToken] = useState<string | null>(null)
+
+  // 🔥 WAIT FOR FIREBASE USER
+  useEffect(() => {
+    const auth = getAuth()
+
+    const unsub = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      setUser(user) // ✅ IMPORTANT
+      const t = await user.getIdToken()
+      setToken(t)
+    } else {
+      setUser(null)
+    }
+
+    setAuthLoading(false) // ✅ IMPORTANT
+  })
+
+    return () => unsub()
+}, [])
+
+  // 🔥 ONLY FETCH IF USER EXISTS
+  const { data, isLoading } = useSWR(
+  token ? ["notifications", token] : null,
+  ([, token]) => fetchNotifications("notifications", token)
+)
+
+  // 🔥 MAP BACKEND DATA
+  useEffect(() => {
+    if (!data) return
+
+    const mapped = data.map((n: any) => ({
+      id: n.id,
+      title: n.title,
+      message: n.message,
+      type: n.is_read ? "read" : "unread",
+      timestamp: new Date(n.created_at).toLocaleString(),
+      icon: n.is_read ? <CheckCircle2 size={20} /> : <Clock size={20} />,
+      color: n.is_read ? "#e8ff47" : "#47ffe8",
+    }))
+
+    setNotifications(mapped)
+  }, [data])
 
   const filteredNotifications = useMemo(() => {
     if (filter === "all") return notifications
@@ -138,6 +120,25 @@ export default function NotificationPage() {
     new: notifications.filter((n) => n.type === "new").length,
     unread: notifications.filter((n) => n.type === "unread").length,
     read: notifications.filter((n) => n.type === "read").length,
+  }
+
+  // 🔥 AUTH LOADING
+  if (authLoading) {
+    return <p className="text-center text-white/60 mt-10">Loading...</p>
+  }
+
+  // 🔥 NOT LOGGED IN
+  if (!user) {
+    return (
+      <NoNotification/>
+    )
+  }
+
+  // 🔥 NO NOTIFICATIONS
+  if (!isLoading && notifications.length === 0) {
+    return (
+      <NoNotification/>
+    )
   }
 
   return (
@@ -209,7 +210,7 @@ export default function NotificationPage() {
             >
               <div className="flex gap-4 sm:gap-6">
                 {/* Icon */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div
                     className="flex h-10 w-10 items-center justify-center rounded-lg sm:h-12 sm:w-12"
                     style={{
@@ -217,7 +218,7 @@ export default function NotificationPage() {
                       color: notification.color,
                     }}
                   >
-                    {notification.icon}
+                    <Bell/>
                   </div>
                 </div>
 
@@ -228,12 +229,12 @@ export default function NotificationPage() {
                       <h3 className="text-base font-semibold text-white sm:text-lg">
                         {notification.title}
                       </h3>
-                      <p className="mt-1 text-sm break-words text-white/60 sm:text-base">
+                      <p className="mt-1 text-sm wrap-break-words text-white/60 sm:text-base">
                         {notification.message}
                       </p>
                     </div>
                     <span
-                      className={`flex-shrink-0 rounded-full px-2 py-1 text-xs font-medium sm:px-3 ${getStatusBadgeColor(
+                      className={`shrink-0 rounded-full px-2 py-1 text-xs font-medium sm:px-3 ${getStatusBadgeColor(
                         notification.type
                       )}`}
                     >
