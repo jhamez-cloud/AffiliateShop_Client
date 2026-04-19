@@ -73,7 +73,6 @@ export default function SignInPage({
 
   const handleGoogleSignIn = async () => {
     setError("")
-    setIsLoading(true)
 
     try {
       const provider = new GoogleAuthProvider()
@@ -82,6 +81,8 @@ export default function SignInPage({
       provider.addScope("email")
 
       const result = await signInWithPopup(auth, provider)
+
+      setIsLoading(true)
       console.log("Google sign-in successful:", result.user)
       const userEmail = result.user.email || ""
       onSignInSuccess?.(userEmail)

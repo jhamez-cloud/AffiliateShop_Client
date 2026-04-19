@@ -26,6 +26,7 @@ import {
 import useSWRMutation from "swr/mutation"
 import { createuser } from "@/lib/api" 
 import firebase from "firebase/compat/app"
+import { CreateUserPayload } from "@/types/payload"
 
 export default function SignUpPage({
   onSignUpSuccess,
@@ -49,8 +50,7 @@ export default function SignUpPage({
     fullname:"",
     phone:""
   })
-  const {trigger} =  useSWRMutation<any,any,string,
-    {firebase_uid:string,email:string,fullname?:string,phone?:string}>(`users`,createuser)
+  const {trigger} =  useSWRMutation<any,any,string,CreateUserPayload>('users',createuser)
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -88,9 +88,9 @@ export default function SignUpPage({
       )
 
       const payload = {
-        firebase_uid : userCredential.user.uid,
-        email : formData.email,
-        fullname : formData.fullname,
+        firebase_uid: userCredential.user.uid,
+        email: userCredential.user.email!, // FIX
+        fullname: fullName,
         phone: formData.phone,
       }
 
@@ -233,7 +233,10 @@ export default function SignUpPage({
                 type="text"
                 placeholder="Enter your full name"
                 value={fullName}
-                onChange={(e) => setFormData({...formData,fullname:e.target.value})}
+                onChange={(e) => {
+                  setFormData({...formData,fullname:e.target.value})
+                  setFullName(e.target.value)
+                }}
                 className="border-0 bg-transparent text-white placeholder-white/30 focus:ring-0"
                 disabled={isLoading}
               />
