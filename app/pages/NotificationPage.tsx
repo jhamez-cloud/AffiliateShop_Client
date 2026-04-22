@@ -56,8 +56,9 @@ export default function NotificationPage() {
 )
 
   const context = useContext(notificationContext)
-  if(!context) throw new Error("Notification context not found")
-
+  if(!context) {
+    throw new Error("Wrap notification page with NotificationContextProvider in layout.tsx")
+  }
   const { setNotificationCount } = context
 
   // 🔥 MAP BACKEND DATA
