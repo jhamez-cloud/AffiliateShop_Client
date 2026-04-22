@@ -11,7 +11,7 @@ const fetcher = async (endpoint:string) => {
     const data = await res.json()
     return data
     
-    console.log(data)
+    console.log("Faah...Nothing in console for you bruh")
 }
 
 export const APIProvider = ({children}:{children:React.ReactNode}) => {

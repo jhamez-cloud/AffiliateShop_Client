@@ -67,7 +67,7 @@ export default function HomePage({ navigate }:{navigate:(page:string) => void}) 
     if (amazon) setAmazonProducts(amazon.slice(0,4))
     if (alibaba) setAlibabaProducts(alibaba.slice(0,4))
 
-    console.log({ jumia, jumiaError, temu, temuError });
+    //log errors
 
     return () => clearInterval(t);
   }, [jumia, temu, amazon, alibaba]);

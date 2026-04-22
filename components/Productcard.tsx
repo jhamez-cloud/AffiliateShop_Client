@@ -60,7 +60,9 @@ export default function ProductCard({ product, compact = false }:{ product: Prod
 
       {/* Add to Cart */}
       <Button variant={"link"}  className="mt-3 w-full bg-white/5 hover:bg-[#e8ff47] hover:text-black border border-white/10 hover:border-[#e8ff47] text-white text-xs font-semibold py-2 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0">
-        <a href="https://wa.link/wzr6fk">Interested</a>
+        <a href="" target="_blank" rel="noopener noreferrer">
+          Interested
+        </a>
       </Button>
     </div>
   );

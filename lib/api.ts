@@ -29,7 +29,7 @@ export const fetchNotifications = async (endpoint: string,token:string) => {
   if (!user) {
     throw new Error("Firebase user not ready yet")
   }
-  console.log("TOKEN:", token)
+  //log token for debugging
 
   const res = await fetch(`${Django_Url}/api/v1/${endpoint}/`, {
     headers: {
@@ -41,6 +41,6 @@ export const fetchNotifications = async (endpoint: string,token:string) => {
   
   const notificationData = await res.json()
 
-  console.log(notificationData)
+  //log notification data for debugging
   return notificationData
 }

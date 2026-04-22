@@ -37,7 +37,7 @@ export default function App() {
       setIsAuthenticated(false)
       setUserEmail(null)
       setCurrentPage("home")
-      console.log("User signed out successfully")
+      //user signed out successfully, now we can call the success callback
     } catch (error) {
       console.error("Error signing out:", error)
     }

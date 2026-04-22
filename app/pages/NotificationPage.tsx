@@ -5,14 +5,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 import {
   CheckCircle2,
   Clock,
-  AlertCircle,
   Trash2,
-  Eye,
   EyeOff,
   Bell,
 } from "lucide-react"
 import { fetchNotifications } from "@/lib/api"
 import NoNotification from "@/components/NoNotification"
+import ApiLoading from "@/components/ApiLoading"
 
 interface Notification {
   id: number
@@ -124,7 +123,7 @@ export default function NotificationPage() {
 
   // 🔥 AUTH LOADING
   if (authLoading) {
-    return <p className="text-center text-white/60 mt-10">Loading...</p>
+    return <ApiLoading/>
   }
 
   // 🔥 NOT LOGGED IN

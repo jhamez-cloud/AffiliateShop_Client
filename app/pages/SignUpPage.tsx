@@ -14,7 +14,6 @@ import {
   Globe,
   User,
   CheckCircle2,
-  Phone,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,7 +24,6 @@ import {
 } from "@/components/ui/input-group"
 import useSWRMutation from "swr/mutation"
 import { createuser } from "@/lib/api" 
-import firebase from "firebase/compat/app"
 import { CreateUserPayload } from "@/types/payload"
 
 export default function SignUpPage({
@@ -95,8 +93,7 @@ export default function SignUpPage({
       }
 
       await trigger(payload)
-      console.log("User created successfully:", userCredential.user)
-
+      //user created successfully, now we can log them in or redirect
       const userEmail = userCredential.user.email || email
 
       setSuccess("Account created successfully! Redirecting...")
@@ -146,7 +143,6 @@ export default function SignUpPage({
 
       await trigger(payload)
 
-      console.log("Google sign-in successful:", result.user)
       const userEmail = result.user.email || ""
       setSuccess("Account created successfully! Redirecting...")
       setTimeout(() => {

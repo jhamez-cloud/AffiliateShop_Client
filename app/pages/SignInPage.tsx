@@ -47,7 +47,7 @@ export default function SignInPage({
         email,
         password
       )
-      console.log("User signed in successfully:", userCredential.user)
+      //user signed in successfully, now we can call the success callback
       const userEmail = userCredential.user.email || email
       onSignInSuccess?.(userEmail)
     } catch (err: any) {
@@ -83,7 +83,7 @@ export default function SignInPage({
       const result = await signInWithPopup(auth, provider)
 
       setIsLoading(true)
-      console.log("Google sign-in successful:", result.user)
+      //google sign-in successful, now we can call the success callback with the user's email
       const userEmail = result.user.email || ""
       onSignInSuccess?.(userEmail)
     } catch (err: any) {

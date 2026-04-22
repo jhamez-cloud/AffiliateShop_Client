@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Empty,
   EmptyHeader,
@@ -8,7 +7,6 @@ import {
   EmptyContent
 } from './ui/empty'
 import { Button } from './ui/button';
-import { SearchXIcon } from 'lucide-react';
 import { Spinner } from './ui/spinner';
 
 export default function NoNotification({navigate}:{navigate?:(page:string) => void}) {
