@@ -4,6 +4,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 import { APIProvider } from "@/Providers";
+import { NotificationContextProvider } from "@/context/contextProvider";
 
 //const inter = Inter({subsets:['latin'],variable:'--font-sans'})
 
@@ -31,7 +32,9 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
             <APIProvider>
-              {children}
+              <NotificationContextProvider>
+                {children}
+              </NotificationContextProvider>
             </APIProvider>
         </ThemeProvider>
       </body>
