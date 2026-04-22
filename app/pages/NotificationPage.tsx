@@ -1,5 +1,5 @@
 "use client"
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, useContext } from "react"
 import useSWR from "swr"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import {
@@ -12,6 +12,7 @@ import {
 import { fetchNotifications } from "@/lib/api"
 import NoNotification from "@/components/NoNotification"
 import ApiLoading from "@/components/ApiLoading"
+import { notificationContext } from "@/context/stateContext"
 
 interface Notification {
   id: number
@@ -54,10 +55,16 @@ export default function NotificationPage() {
   ([, token]) => fetchNotifications("notifications", token)
 )
 
+  const context = useContext(notificationContext)
+  if(!context) throw new Error("Notification context not found")
+
+  const { setNotificationCount } = context
+
   // 🔥 MAP BACKEND DATA
   useEffect(() => {
     if (!data) return
 
+    setNotificationCount(data.filter((n: any) => !n.is_read).length) // Update global notification count
     const mapped = data.map((n: any) => ({
       id: n.id,
       title: n.title,

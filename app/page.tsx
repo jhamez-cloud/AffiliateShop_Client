@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { auth } from "@/lib/firebase"
 import { signOut } from "firebase/auth"
 import Navbar from "../components/Navbar"
@@ -10,25 +10,20 @@ import ContactPage from "./pages/ContactPage"
 import NotificationPage from "./pages/NotificationPage"
 import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
+import { notificationContext } from "@/context/stateContext"
 
-// Mock notifications data - matching NotificationPage
-const mockNotifications = [
-  { id: 1, type: "new" },
-  { id: 2, type: "new" },
-  { id: 3, type: "unread" },
-  { id: 4, type: "unread" },
-  { id: 5, type: "read" },
-  { id: 6, type: "read" },
-  { id: 7, type: "read" },
-]
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home")
-  const [notifications, setNotifications] = useState(mockNotifications)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user_email, setUserEmail] = useState<string | null>(null)
 
   const navigate = (page: string) => setCurrentPage(page)
+
+  const context = useContext(notificationContext)
+  if(!context) throw new Error("Notification context not found")
+
+  const { notificationCount } = context
 
   // Logout handler
   const handleSignOut = async () => {
@@ -43,17 +38,12 @@ export default function App() {
     }
   }
 
-  // Count new and unread notifications
-  const notificationCount = notifications.filter(
-    (n) => n.type === "new" || n.type === "unread"
-  ).length
-
   return (
     <div className="flex min-h-screen flex-col bg-[#0a0a0a] font-sans text-white">
       <Navbar
         currentPage={currentPage}
         navigate={navigate}
-        notificationCount={notificationCount}
+        notificationCount={notificationCount || 0}
         isAuthenticated={isAuthenticated}
         user_email={user_email || undefined}
         onSignOut={handleSignOut}

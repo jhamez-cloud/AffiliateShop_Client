@@ -7,14 +7,14 @@ import {
   EmptyContent
 } from './ui/empty'
 import { Button } from './ui/button';
-import { LoaderIcon } from 'lucide-react';
+import { Spinner } from './ui/spinner';
 
 export default function ApiLoading() {
   return (
     <Empty className="w-full">
         <EmptyHeader>
             <EmptyMedia variant="icon">
-                <LoaderIcon/>
+                <Spinner color='white'/>
             </EmptyMedia>
 
             <EmptyTitle>Processing your request</EmptyTitle>
