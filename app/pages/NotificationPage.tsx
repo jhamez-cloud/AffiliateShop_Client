@@ -137,7 +137,11 @@ export default function NotificationPage({
     return (
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="py-12 text-center sm:py-16">
-          <div className="mb-3 text-2xl text-white/30"><LockIcon/></div>
+          <div className="mb-3 text-2xl text-white/30">
+            <div className="w-full flex justify-center items-center">
+              <LockIcon color="#e8ff47" size={32}/>
+            </div>
+          </div>
           <h3 className="mb-2 text-lg font-semibold text-white">
             Sign in to view notifications
           </h3>
@@ -172,7 +176,11 @@ export default function NotificationPage({
     return (
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="py-12 text-center sm:py-16">
-          <div className="mb-3 text-2xl text-white/30"><AlertTriangle color="#d1e70cff"/></div>
+          <div className="mb-3 text-2xl text-white/30">
+            <div className="w-full justify-center items-center">
+              <AlertTriangle color="#d1e70cff" size={32}/>
+            </div>
+          </div>
           <h3 className="mb-2 text-lg font-semibold text-white">
             Error loading notifications
           </h3>
