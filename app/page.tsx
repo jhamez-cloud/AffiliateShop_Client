@@ -12,7 +12,6 @@ import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
 import { notificationContext } from "@/context/stateContext"
 
-
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home")
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -21,7 +20,7 @@ export default function App() {
   const navigate = (page: string) => setCurrentPage(page)
 
   const context = useContext(notificationContext)
-  if(!context) throw new Error("Notification context not found")
+  if (!context) throw new Error("Notification context not found")
 
   const { notificationCount } = context
 
@@ -72,7 +71,9 @@ export default function App() {
         {currentPage === "home" && <HomePage navigate={navigate} />}
         {currentPage === "shop" && <ShopPage />}
         {currentPage === "contact" && <ContactPage />}
-        {currentPage === "notification" && <NotificationPage />}
+        {currentPage === "notification" && (
+          <NotificationPage navigate={navigate} />
+        )}
       </main>
       {currentPage !== "signin" && currentPage !== "signup" && (
         <Footer navigate={navigate} />

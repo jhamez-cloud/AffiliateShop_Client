@@ -2,13 +2,7 @@
 import { useState, useMemo, useEffect, useContext } from "react"
 import useSWR from "swr"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
-import {
-  CheckCircle2,
-  Clock,
-  Trash2,
-  EyeOff,
-  Bell,
-} from "lucide-react"
+import { CheckCircle2, Clock, Trash2, EyeOff, Bell, LockIcon, AlertTriangle } from "lucide-react"
 import { fetchNotifications } from "@/lib/api"
 import NoNotification from "@/components/NoNotification"
 import ApiLoading from "@/components/ApiLoading"
@@ -23,7 +17,9 @@ interface Notification {
   color: string
 }
 
-export default function NotificationPage() {
+export default function NotificationPage({
+  navigate,
+}: { navigate?: (page: string) => void } = {}) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [filter, setFilter] = useState<"all" | "new" | "unread" | "read">("all")
   const [user, setUser] = useState<any>(null)
@@ -35,29 +31,31 @@ export default function NotificationPage() {
     const auth = getAuth()
 
     const unsub = onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      setUser(user) // ✅ IMPORTANT
-      const t = await user.getIdToken()
-      setToken(t)
-    } else {
-      setUser(null)
-    }
+      if (user) {
+        setUser(user) // ✅ IMPORTANT
+        const t = await user.getIdToken()
+        setToken(t)
+      } else {
+        setUser(null)
+      }
 
-    setAuthLoading(false) // ✅ IMPORTANT
-  })
+      setAuthLoading(false) // ✅ IMPORTANT
+    })
 
     return () => unsub()
-}, [])
+  }, [])
 
   // 🔥 ONLY FETCH IF USER EXISTS
-  const { data, isLoading } = useSWR(
-  token ? ["notifications", token] : null,
-  ([, token]) => fetchNotifications("notifications", token)
-)
+  const { data, error, isLoading, mutate } = useSWR(
+    token ? ["notifications", token] : null,
+    ([, token]) => fetchNotifications("notifications", token)
+  )
 
   const context = useContext(notificationContext)
-  if(!context) {
-    throw new Error("Wrap notification page with NotificationContextProvider in layout.tsx")
+  if (!context) {
+    throw new Error(
+      "Wrap notification page with NotificationContextProvider in layout.tsx"
+    )
   }
   const { setNotificationCount } = context
 
@@ -131,20 +129,67 @@ export default function NotificationPage() {
 
   // 🔥 AUTH LOADING
   if (authLoading) {
-    return <ApiLoading/>
+    return <ApiLoading />
   }
 
-  // 🔥 NOT LOGGED IN
+  // 🔥 NOT LOGGED IN — show sign-in prompt
   if (!user) {
     return (
-      <NoNotification/>
+      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="py-12 text-center sm:py-16">
+          <div className="mb-3 text-2xl text-white/30"><LockIcon/></div>
+          <h3 className="mb-2 text-lg font-semibold text-white">
+            Sign in to view notifications
+          </h3>
+          <p className="mb-6 text-sm text-white/40">
+            You must be signed in to see your notifications and updates.
+          </p>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => navigate?.("signin")}
+              className="rounded-lg bg-[#e8ff47] px-4 py-2 font-medium text-black hover:bg-[#d4eb2e]"
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => navigate?.("signup")}
+              className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 font-medium text-white/60 hover:bg-white/10"
+            >
+              Create Account
+            </button>
+          </div>
+        </div>
+      </div>
     )
   }
 
-  // 🔥 NO NOTIFICATIONS
-  if (!isLoading && notifications.length === 0) {
+  // 🔥 FETCHING OR ERROR STATES
+  if (isLoading) {
+    return <ApiLoading />
+  }
+
+  if (error) {
     return (
-      <NoNotification/>
+      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="py-12 text-center sm:py-16">
+          <div className="mb-3 text-2xl text-white/30"><AlertTriangle color="#d1e70cff"/></div>
+          <h3 className="mb-2 text-lg font-semibold text-white">
+            Error loading notifications
+          </h3>
+          <p className="mb-6 text-sm text-white/40">
+            {(error as any)?.message ||
+              "Something went wrong while fetching notifications."}
+          </p>
+          <div className="flex justify-center">
+            <button
+              onClick={() => mutate()}
+              className="rounded-lg bg-[#e8ff47] px-4 py-2 font-medium text-black hover:bg-[#d4eb2e]"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
     )
   }
 
@@ -225,7 +270,7 @@ export default function NotificationPage() {
                       color: notification.color,
                     }}
                   >
-                    <Bell/>
+                    <Bell />
                   </div>
                 </div>
 
@@ -236,7 +281,7 @@ export default function NotificationPage() {
                       <h3 className="text-base font-semibold text-white sm:text-lg">
                         {notification.title}
                       </h3>
-                      <p className="mt-1 text-sm wrap-break-words text-white/60 sm:text-base">
+                      <p className="wrap-break-words mt-1 text-sm text-white/60 sm:text-base">
                         {notification.message}
                       </p>
                     </div>
@@ -293,7 +338,11 @@ export default function NotificationPage() {
           ))
         ) : (
           <div className="py-12 text-center sm:py-16">
-            <div className="mb-3 text-2xl text-white/30">🔔</div>
+            <div className="mb-3 text-2xl text-white/30">
+               <div className="w-full flex justify-center items-center">
+                <Bell size={32} color="gold"/>
+               </div>
+            </div>
             <h3 className="mb-2 text-lg font-semibold text-white">
               No notifications
             </h3>
