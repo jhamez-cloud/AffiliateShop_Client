@@ -18,6 +18,28 @@ const geistSans = Geist({
   subsets:["latin"],
 })
 
+export const metadata = {
+    title: "Affiliate Shop",
+    description: "Find the best deals from Jumia, Amazon, Alibaba and more.",
+    openGraph: {
+        title: "Affiliate Shop",
+        description: "Find the best deals from Jumia, Amazon, Alibaba and more.",
+        url: "https://affiliate-shop-client-iyjv.vercel.app",
+        images: [
+            {
+                url: "../public/images/affiliate_preview.png",
+                width: 1200,
+                height: 630,
+            }
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Affiliate Shop",
+        images: ["https://your-image-url.com/preview.jpg"],
+    },
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
