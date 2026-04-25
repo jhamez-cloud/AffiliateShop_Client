@@ -27,7 +27,7 @@ export const metadata = {
         url: "https://affiliate-shop-client-iyjv.vercel.app",
         images: [
             {
-                url: "../public/images/affiliate_preview.png",
+                url: "https://affiliate-shop-client-iyjv.vercel.app/images/affiliate_preview.png",
                 width: 1200,
                 height: 630,
             }
